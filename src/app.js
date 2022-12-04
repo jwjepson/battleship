@@ -17,7 +17,7 @@ function Ship(length) {
 
 function GameBoard() {
     const coordinates = [];
-    function isValidCoords(coords, shipLength) {
+    function isValidCoords(coords, shipLength, isHorizontal) {
         if (JSON.stringify(coordinates).includes(JSON.stringify(coords))) {
             console.log("Match");
             return false;                 
@@ -38,21 +38,21 @@ function GameBoard() {
     return {
         getRandomCoordinates(ship) {
             const shipLength = ship.length;
-            isHorizontal = Math.random() > 0.5 ? true : false;
+            const isHorizontal = Math.random() > 0.5 ? true : false;
             let x;
             let y;
             while (true) {
                 x = Math.floor(Math.random() * 10);
                 y = Math.floor(Math.random() * 10);
                 if (isHorizontal) {
-                    if ((x + ship.length > 10) || (!isValidCoords([x, y], shipLength)))  {
+                    if ((x + ship.length > 10) || (!isValidCoords([x, y], shipLength, isHorizontal)))  {
                         continue;
                     } else {
                         break;
                     }
                 }
                 else if (!isHorizontal) {
-                    if ((y + ship.length > 10) || (!isValidCoords([x, y], shipLength)))  {
+                    if ((y + ship.length > 10) || (!isValidCoords([x, y], shipLength, isHorizontal)))  {
                         continue;
                     } else {
                         break;
@@ -74,3 +74,5 @@ function GameBoard() {
         }
     }
 }
+
+export {Ship, GameBoard};
