@@ -35,6 +35,19 @@ function GameBoard() {
         }
         return true;
     }
+    function setCoordinates(ship, x, y, isHorizontal) {
+        ship.coordinates.push([x, y]);
+        coordinates.push([x, y]);
+        for (let i = 1; i < ship.length; i++) {
+            if (isHorizontal) {
+                x = x + 1;
+            } else {
+                y = y + 1;
+            }
+            ship.coordinates.push([x, y]);
+            coordinates.push([x, y]);
+        }
+    }
     return {
         getRandomCoordinates(ship) {
             const shipLength = ship.length;
@@ -50,37 +63,14 @@ function GameBoard() {
                     break;
                 }
             }
-    
-            ship.coordinates.push([x, y]);
-            coordinates.push([x, y]);
-            for (let i = 1; i < shipLength; i++) {
-                if (isHorizontal) {
-                    x = x + 1;
-                } else {
-                    y = y + 1;
-                }
-                ship.coordinates.push([x, y]);
-                coordinates.push([x, y]);
-            }
+            setCoordinates(ship, x, y, isHorizontal);
         },
-        setCoordinates(ship, coords, isHorizontal) {
+        getCoordinates(ship, coords, isHorizontal) {
             if (isValidCoords(coords, ship.length, isHorizontal)) {
                 let x = coords[0];
                 let y = coords[1];
-                ship.coordinates.push([x, y]);
-                coordinates.push([x, y]);
-                for (let i = 1; i < ship.length; i++) {
-                    if (isHorizontal) {
-                        x = x + 1;
-                    } else {
-                        y = y + 1;
-                    }
-                    ship.coordinates.push([x, y]);
-                    coordinates.push([x, y]);
-                }
+                setCoordinates(ship, x, y, isHorizontal);
             }
         }
     }
 }
-
-export {Ship, GameBoard};
