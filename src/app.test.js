@@ -1,4 +1,4 @@
-import {Ship} from "./app";
+import {Ship, GameBoard} from "./app";
 
 
 // Ship Tests //
@@ -20,5 +20,3 @@ test("correctly determines if ship is sunk", () => {
     expect(ship.isSunk()).toBeFalsy();
 })
 // Ship Tests //
-
-
