@@ -41,45 +41,36 @@ function GameBoard() {
             isHorizontal = Math.random() > 0.5 ? true : false;
             let x;
             let y;
-            if (isHorizontal) {
-                while (true) {
-                    x = Math.floor(Math.random() * 10);
-                    y = Math.floor(Math.random() * 10);
+            while (true) {
+                x = Math.floor(Math.random() * 10);
+                y = Math.floor(Math.random() * 10);
+                if (isHorizontal) {
                     if ((x + ship.length > 10) || (!isValidCoords([x, y], shipLength)))  {
                         continue;
                     } else {
                         break;
                     }
                 }
-    
-                ship.coordinates.push([x, y]);
-                coordinates.push([x, y]);
-                for (let i = 1; i < shipLength; i++) {
-                    x = x + 1;
-                    ship.coordinates.push([x, y]);
-                    coordinates.push([x, y]);
-                }
-            } else {
-                while (true) {
-                    x = Math.floor(Math.random() * 10);
-                    y = Math.floor(Math.random() * 10);
+                else if (!isHorizontal) {
                     if ((y + ship.length > 10) || (!isValidCoords([x, y], shipLength)))  {
                         continue;
                     } else {
                         break;
                     }
                 }
+            } 
     
+            ship.coordinates.push([x, y]);
+            coordinates.push([x, y]);
+            for (let i = 1; i < shipLength; i++) {
+                if (isHorizontal) {
+                    x = x + 1;
+                } else {
+                    y = y + 1;
+                }
                 ship.coordinates.push([x, y]);
                 coordinates.push([x, y]);
-                for (let i = 1; i < shipLength; i++) {
-                    y = y + 1;
-                    ship.coordinates.push([x, y]);
-                    coordinates.push([x, y]);
-                }
             }
         }
     }
 }
-
-export {Ship, GameBoard};
