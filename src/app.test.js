@@ -42,14 +42,14 @@ test("correctly gives correct number of coordinates based on size of ship", () =
 test("correctly places ship horizontally at specified coordinate", () => {
     const ship = Ship(5);
     const board = GameBoard();
-    board.setCoordinates(ship, [5, 2], true);
+    board.getCoordinates(ship, [5, 2], true);
     expect(ship.coordinates).toEqual([[5, 2], [6, 2], [7, 2], [8, 2], [9, 2]]);
 })
 
 test("correctly places ship vertically at specified coordinate", () => {
     const ship = Ship(5);
     const board = GameBoard();
-    board.setCoordinates(ship, [0, 2], false);
+    board.getCoordinates(ship, [0, 2], false);
     expect(ship.coordinates).toEqual([[0, 2], [0, 3], [0, 4], [0, 5], [0, 6]]);
 })
 
