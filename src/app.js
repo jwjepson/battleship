@@ -24,11 +24,11 @@ function GameBoard() {
         }
         for (let i = 1; i < shipLength; i++) {
             if (isHorizontal) {
-                if (JSON.stringify(coordinates).includes(JSON.stringify([coords[0] + i, coords[1]]))) {
+                if ((coords[0] + shipLength > 10) || (JSON.stringify(coordinates).includes(JSON.stringify([coords[0] + i, coords[1]])))) {
                     return false;
                 }
             } else {
-                if (JSON.stringify(coordinates).includes(JSON.stringify([coords[0], coords[1] + i]))) {
+                if ((coords[1] + shipLength > 10) || (JSON.stringify(coordinates).includes(JSON.stringify([coords[0], coords[1] + i])))) {
                     return false;
                 }
             }
@@ -44,21 +44,12 @@ function GameBoard() {
             while (true) {
                 x = Math.floor(Math.random() * 10);
                 y = Math.floor(Math.random() * 10);
-                if (isHorizontal) {
-                    if ((x + ship.length > 10) || (!isValidCoords([x, y], shipLength, isHorizontal)))  {
-                        continue;
-                    } else {
-                        break;
-                    }
+                if (!isValidCoords([x, y], shipLength, isHorizontal)) {
+                    continue;
+                } else {
+                    break;
                 }
-                else if (!isHorizontal) {
-                    if ((y + ship.length > 10) || (!isValidCoords([x, y], shipLength, isHorizontal)))  {
-                        continue;
-                    } else {
-                        break;
-                    }
-                }
-            } 
+            }
     
             ship.coordinates.push([x, y]);
             coordinates.push([x, y]);
@@ -70,6 +61,23 @@ function GameBoard() {
                 }
                 ship.coordinates.push([x, y]);
                 coordinates.push([x, y]);
+            }
+        },
+        setCoordinates(ship, coords, isHorizontal) {
+            if (isValidCoords(coords, ship.length, isHorizontal)) {
+                let x = coords[0];
+                let y = coords[1];
+                ship.coordinates.push([x, y]);
+                coordinates.push([x, y]);
+                for (let i = 1; i < ship.length; i++) {
+                    if (isHorizontal) {
+                        x = x + 1;
+                    } else {
+                        y = y + 1;
+                    }
+                    ship.coordinates.push([x, y]);
+                    coordinates.push([x, y]);
+                }
             }
         }
     }
