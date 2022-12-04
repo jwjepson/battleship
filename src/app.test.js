@@ -20,3 +20,11 @@ test("correctly determines if ship is sunk", () => {
     expect(ship.isSunk()).toBeFalsy();
 })
 // Ship Tests //
+
+test("correctly gives random coordinates to ship", () => {
+    const ship = Ship(3);
+    const board = GameBoard();
+    expect(ship.coordinates).toEqual([]);
+    board.getRandomCoordinates(ship);
+    expect(ship.coordinates).not.toEqual([]);
+})
