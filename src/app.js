@@ -74,3 +74,5 @@ function GameBoard() {
         }
     }
 }
+
+export {Ship, GameBoard};
