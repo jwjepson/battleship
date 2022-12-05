@@ -1,1 +1,1 @@
-(()=>{"use strict"})();
+(()=>{"use strict";document.querySelectorAll(".square").forEach((e=>{e.addEventListener("click",(()=>{console.log(e.getAttribute("data-coords"))}))}))})();
