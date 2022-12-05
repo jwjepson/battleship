@@ -10,7 +10,8 @@ body {
     margin-top: 50px;
     width: 100vw;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 header {
@@ -33,10 +34,26 @@ footer {
     grid-template-columns: repeat(10, 1fr);
 }
 
+.gameboard:hover {
+    cursor: pointer;
+}
+
 .square {
     height: 40px;
     width: 40px;
-    border: 1px solid black;
-    margin-left: -1px;
-    margin-top: -1px;
+    border: .5px solid black;
+}
+
+.shipHover {
+    background-color: gray;
+}
+
+#rotate-button {
+    padding: 10px;
+    width: 87px;
+    margin-bottom: 20px;
+}
+
+#rotate-button:hover {
+    cursor: pointer;
 }
