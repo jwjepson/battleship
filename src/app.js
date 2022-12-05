@@ -17,6 +17,8 @@ function Ship(length) {
 
 function GameBoard() {
     const coordinates = [];
+    const ships = [];
+    const missedAttacks = [];
     function isValidCoords(coords, shipLength, isHorizontal) {
         if (JSON.stringify(coordinates).includes(JSON.stringify(coords))) {
             console.log("Match");
@@ -47,6 +49,7 @@ function GameBoard() {
             ship.coordinates.push([x, y]);
             coordinates.push([x, y]);
         }
+        ships.push(ship);
     }
     return {
         getRandomCoordinates(ship) {
@@ -71,8 +74,21 @@ function GameBoard() {
                 let y = coords[1];
                 setCoordinates(ship, x, y, isHorizontal);
             }
+        },
+        receiveAttack(coords) {
+            let hitShip = false;
+            for (let i = 0; i < ships.length; i++) {
+                if (JSON.stringify(ships[i].coordinates).includes(JSON.stringify(coords))) {
+                    ships[i].hit();
+                    hitShip = true;
+                    break;
+                }
+            }       
+            if (!hitShip) {
+                missedAttacks.push(coords);
+            }
         }
     }
 }
 
-export {Ship, GameBoard};
+export {GameBoard, Ship};
