@@ -21,6 +21,8 @@ test("correctly determines if ship is sunk", () => {
 })
 // Ship Tests //
 
+
+// GameBoard Tests //
 test("correctly gives random coordinates to ship", () => {
     const ship = Ship(3);
     const board = GameBoard();
@@ -52,4 +54,15 @@ test("correctly places ship vertically at specified coordinate", () => {
     board.getCoordinates(ship, [0, 2], false);
     expect(ship.coordinates).toEqual([[0, 2], [0, 3], [0, 4], [0, 5], [0, 6]]);
 })
+
+test("correctly hits a ship when attack is received with correct coordinates", () => {
+    const ship1 = Ship(5);
+    const board = GameBoard();
+
+    board.getCoordinates(ship1, [0, 2], true);
+    board.receiveAttack([1, 2]);
+    expect(ship1.hits).toBe(1);
+})
+
+// GameBoard Tests // 
 
