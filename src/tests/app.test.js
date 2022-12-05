@@ -1,4 +1,4 @@
-import {Ship, GameBoard} from "./app";
+import {Ship, GameBoard} from "../app";
 
 
 // Ship Tests //
