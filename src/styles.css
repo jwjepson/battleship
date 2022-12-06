@@ -35,7 +35,7 @@ footer {
 }
 
 .gameboard.computer {
-    display: grid;
+    display: none;
 }
 
 .gameboard:hover {
@@ -58,10 +58,21 @@ footer {
     background-color: gray;
 }
 
-#rotate-button {
+.attackHover:hover {
+    background-color: red;
+    cursor: crosshair;
+}
+
+#rotate-button, #random-button {
     padding: 10px;
-    width: 87px;
-    margin-bottom: 20px;
+    width: 90px;
+    margin-bottom: 10px;
+}
+
+#selector-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
 }
 
 #rotate-button:hover {
