@@ -9,6 +9,7 @@ function Ship(length) {
         },
         isSunk() {
             if (this.hits == this.length) {
+                this.sunk = true;
                 return true;
             }
         }
@@ -83,11 +84,12 @@ function GameBoard() {
                 if (JSON.stringify(ships[i].coordinates).includes(JSON.stringify(coords))) {
                     ships[i].hit();
                     hitShip = true;
-                    break;
+                    return ships[i];
                 }
             }       
             if (!hitShip) {
                 missedAttacks.push(coords);
+                return false;
             }
         },
         displayShips() {
@@ -110,6 +112,9 @@ function Player(name) {
 }
 
 const playerSquares = document.querySelectorAll(".gameboard.player > .square");
+const computerSquares = document.querySelectorAll(".gameboard.computer > .square");
+const computerBoard = document.querySelector(".gameboard.computer");
+const messageBoard = document.querySelector("#message-board");
 let isHorizontal = false;
 let clicks = 5;
 
@@ -200,8 +205,36 @@ function renderPlacement(shipLength) {
     })
 }
 
+computerSquares.forEach((square) => {
+    square.addEventListener("mouseover", () => {  
+        computerSquares.forEach((square) => {
+            square.classList.remove("attackHover");
+        })  
+        square.classList.add("attackHover"); 
+    })
+    square.addEventListener("click", () => {
+        let x = parseInt(square.getAttribute("data-coords")[1]);
+        let y = parseInt(square.getAttribute("data-coords")[3]);
+        const attackedShip = player.board.receiveAttack([x, y]);
+        if (attackedShip != false) {
+            square.style.backgroundColor = "red";
+            sendMessage(`HIT  [${x}, ${y}]`);
+            if (attackedShip.isSunk()) {
+                sendMessage("You have sank their ship!");
+            }
+        } else {
+            sendMessage(`MISS  [${x}, ${y}]`);
+        }
+    })
+})
+
 function startGame() {
     console.log("Start Game");
+    computerBoard.style.display = "grid";
+    rotateButton.style.display = "none";
 }
 
+function sendMessage(message) {
+    messageBoard.textContent = message;
+}
 renderPlacement(5);
