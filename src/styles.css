@@ -34,8 +34,18 @@ footer {
     grid-template-columns: repeat(10, 1fr);
 }
 
+.gameboard.computer {
+    display: grid;
+}
+
 .gameboard:hover {
     cursor: pointer;
+}
+
+.gameboards {
+    display: flex;
+    gap: 50px;
+    margin-top: 40px;
 }
 
 .square {
@@ -56,4 +66,18 @@ footer {
 
 #rotate-button:hover {
     cursor: pointer;
+}
+
+#message-board {
+    height: 50px;
+    background-color: black;
+    color: white;
+    width: 400px;
+    margin-bottom: 20px;
+    border-radius: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    padding: 5px;
 }
