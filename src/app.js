@@ -73,6 +73,8 @@ function GameBoard() {
                 let x = coords[0];
                 let y = coords[1];
                 setCoordinates(ship, x, y, isHorizontal);
+            } else {
+                return false;
             }
         },
         receiveAttack(coords) {
@@ -87,11 +89,90 @@ function GameBoard() {
             if (!hitShip) {
                 missedAttacks.push(coords);
             }
-        }
+        },
+        displayShips() {
+            return ships;
+        },
+        displayCoordinates() {
+            return coordinates;
+        },
     }
 }
 
+function Player(name) {
+    return {
+        name: name,
+        board: GameBoard(),
+    }
+}
+
+const gameSquares = document.querySelectorAll(".square");
 let isHorizontal = false;
+let clicks = 5;
+
+// Populate players
+const player = Player("Player 1");
+const computer = Player("Computer");
+const randomSelected = false;
+
+gameSquares.forEach((square) => {
+    square.addEventListener("click", () => {
+        getCoords(square);
+    })
+});
+
+function getCoords(square) {
+    let x = parseInt(square.getAttribute("data-coords")[1]);
+    let y = parseInt(square.getAttribute("data-coords")[3]);
+    let coords = [x, y];
+
+    if (JSON.stringify(player.board.displayCoordinates()).includes(JSON.stringify(coords))) {
+        return;
+    }
+
+    if (player.board.displayShips().length == 5) {
+        return;
+    }
+    if (player.board.displayShips().length == 2) {
+        player.board.getCoordinates(Ship(3), coords, isHorizontal);
+        renderBoard(player.board.displayCoordinates());
+        renderPlacement(3);
+    } else {
+        if (player.board.displayShips().length == 4) {
+            player.board.getCoordinates(Ship(clicks), coords, isHorizontal);
+            renderPlacement(0);
+            renderBoard(player.board.displayCoordinates());
+        } else {
+            if ((player.board.getCoordinates(Ship(clicks), coords, isHorizontal)) != false) {
+                renderPlacement(clicks - 1);
+                renderBoard(player.board.displayCoordinates());
+                clicks--;
+            }
+        }
+    }
+    console.log(player.board.displayShips());
+}
+
+
+function main() {
+    
+    //Populate Ships
+    if (randomSelected) {
+        for (let i = 5; i > 1; i--) {
+            if (i == 3) {
+                player.board.getRandomCoordinates(Ship(i));
+                player.board.getRandomCoordinates(Ship(i));
+                computer.board.getRandomCoordinates(Ship(i));
+                computer.board.getRandomCoordinates(Ship(i));
+            } else {
+                player.board.getRandomCoordinates(Ship(i));
+                computer.board.getRandomCoordinates(Ship(i));
+            }
+        }
+    } else {
+        renderPlacement(5);
+    } 
+}
 
 const rotateButton = document.querySelector("#rotate-button");
 rotateButton.addEventListener("click", () => {
@@ -102,32 +183,41 @@ rotateButton.addEventListener("click", () => {
     }
 })
 
-const gameSquares = document.querySelectorAll(".square");
-gameSquares.forEach((square) => {
-    square.addEventListener("mouseover", () => {
-        gameSquares.forEach((square) => {
-            square.classList.remove("shipHover");
-        });
 
-        let x = parseInt(square.getAttribute("data-coords")[1]);
-        let y = parseInt(square.getAttribute("data-coords")[3]);
-
-        if (isHorizontal) {
-            if (x <= 5) {
-                for (let i = 0; i < 5; i++) {
-                    document.querySelector(`[data-coords='[${x + i},${y}]']`).classList.add("shipHover");
-                }
-            }
-        } else {
-            if (y <= 5) {
-                for (let i = 0; i < 5; i++) {
-                    document.querySelector(`[data-coords='[${x},${y + i}]']`).classList.add("shipHover");
-                }
-            }
-        }
+function renderBoard(coords) {
+    coords.forEach((coord) => {
+        document.querySelector(`[data-coords='[${coord[0]},${coord[1]}]']`).style.backgroundColor = "gray";
     })
-})
+}
 
+function renderPlacement(shipLength) {
+    gameSquares.forEach((square) => {
+        square.addEventListener("mouseover", () => {
+            gameSquares.forEach((square) => {
+                square.classList.remove("shipHover");
+            });
 
+            let x = parseInt(square.getAttribute("data-coords")[1]);
+            let y = parseInt(square.getAttribute("data-coords")[3]);
 
-export {GameBoard, Ship};
+            if (isHorizontal) {
+                if (x + shipLength <= 10) {
+                    for (let i = 0; i < shipLength; i++) {
+                        document.querySelector(`[data-coords='[${x + i},${y}]']`).classList.add("shipHover");
+                    }
+                }
+            } else {
+                if (y + shipLength <= 10) {
+                    for (let i = 0; i < shipLength; i++) {
+                        document.querySelector(`[data-coords='[${x},${y + i}]']`).classList.add("shipHover");
+                    }
+                }
+            }
+        })
+    })
+}
+
+const ship = Ship(5);
+const ship1 = Ship(4);
+
+main();
