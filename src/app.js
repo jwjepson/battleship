@@ -139,9 +139,10 @@ function getCoords(square) {
         renderPlacement(3);
     } else {
         if (player.board.displayShips().length == 4) {
-            player.board.getCoordinates(Ship(clicks), coords, isHorizontal);
-            renderPlacement(0);
-            renderBoard(player.board.displayCoordinates());
+            if ((player.board.getCoordinates(Ship(clicks), coords, isHorizontal)) != false) {
+                renderPlacement(0);
+                renderBoard(player.board.displayCoordinates());
+            }
         } else {
             if ((player.board.getCoordinates(Ship(clicks), coords, isHorizontal)) != false) {
                 renderPlacement(clicks - 1);
