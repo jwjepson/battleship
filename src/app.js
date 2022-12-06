@@ -100,6 +100,14 @@ function GameBoard() {
         },
         deleteShips() {
             ships.splice(0, ships.length);
+        },
+        allShipsSunk() {
+            for (let i = 0; i < ships.length; i++) {
+                if (ships[i].sunk == false) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
@@ -216,14 +224,20 @@ computerSquares.forEach((square) => {
         let x = parseInt(square.getAttribute("data-coords")[1]);
         let y = parseInt(square.getAttribute("data-coords")[3]);
         const attackedShip = player.board.receiveAttack([x, y]);
-        if (attackedShip != false) {
+
+        if (attackedShip != false && player.board.allShipsSunk() != true) {
             square.style.backgroundColor = "red";
-            sendMessage(`HIT  [${x}, ${y}]`);
+            sendMessage(`${player.name} HIT!  [${x}, ${y}]`);
             if (attackedShip.isSunk()) {
                 sendMessage("You have sank their ship!");
             }
-        } else {
-            sendMessage(`MISS  [${x}, ${y}]`);
+        } else if (attackedShip == false && player.board.allShipsSunk() != true) {
+            square.style.backgroundColor = "#D3D3D3";
+            sendMessage(`${player.name} MISSED  [${x}, ${y}]`);
+        }
+        if (player.board.allShipsSunk() == true) {
+            sendMessage(`${player.name} wins the game!`);
+            return;
         }
     })
 })
