@@ -96,6 +96,9 @@ function GameBoard() {
         displayCoordinates() {
             return coordinates;
         },
+        deleteShips() {
+            ships.splice(0, ships.length);
+        }
     }
 }
 
@@ -106,16 +109,16 @@ function Player(name) {
     }
 }
 
-const gameSquares = document.querySelectorAll(".square");
+const playerSquares = document.querySelectorAll(".gameboard.player > .square");
 let isHorizontal = false;
 let clicks = 5;
 
 // Populate players
 const player = Player("Player 1");
 const computer = Player("Computer");
-const randomSelected = false;
+let randomSelected = false;
 
-gameSquares.forEach((square) => {
+playerSquares.forEach((square) => {
     square.addEventListener("click", () => {
         getCoords(square);
     })
@@ -142,6 +145,7 @@ function getCoords(square) {
             if ((player.board.getCoordinates(Ship(clicks), coords, isHorizontal)) != false) {
                 renderPlacement(0);
                 renderBoard(player.board.displayCoordinates());
+                startGame();
             }
         } else {
             if ((player.board.getCoordinates(Ship(clicks), coords, isHorizontal)) != false) {
@@ -151,28 +155,6 @@ function getCoords(square) {
             }
         }
     }
-    console.log(player.board.displayShips());
-}
-
-
-function main() {
-    
-    //Populate Ships
-    if (randomSelected) {
-        for (let i = 5; i > 1; i--) {
-            if (i == 3) {
-                player.board.getRandomCoordinates(Ship(i));
-                player.board.getRandomCoordinates(Ship(i));
-                computer.board.getRandomCoordinates(Ship(i));
-                computer.board.getRandomCoordinates(Ship(i));
-            } else {
-                player.board.getRandomCoordinates(Ship(i));
-                computer.board.getRandomCoordinates(Ship(i));
-            }
-        }
-    } else {
-        renderPlacement(5);
-    } 
 }
 
 const rotateButton = document.querySelector("#rotate-button");
@@ -192,9 +174,9 @@ function renderBoard(coords) {
 }
 
 function renderPlacement(shipLength) {
-    gameSquares.forEach((square) => {
+    playerSquares.forEach((square) => {
         square.addEventListener("mouseover", () => {
-            gameSquares.forEach((square) => {
+            playerSquares.forEach((square) => {
                 square.classList.remove("shipHover");
             });
 
@@ -218,7 +200,8 @@ function renderPlacement(shipLength) {
     })
 }
 
-const ship = Ship(5);
-const ship1 = Ship(4);
+function startGame() {
+    console.log("Start Game");
+}
 
-main();
+renderPlacement(5);
