@@ -108,6 +108,14 @@ function GameBoard() {
                 }
             }
             return true;
+        },
+        randomCoordinate() {
+            x = Math.floor(Math.random() * 10);
+            y = Math.floor(Math.random() * 10);
+            return [x, y];
+        },
+        displayMissedAttacks() {
+            return missedAttacks;
         }
     }
 }
@@ -223,29 +231,71 @@ computerSquares.forEach((square) => {
     square.addEventListener("click", () => {
         let x = parseInt(square.getAttribute("data-coords")[1]);
         let y = parseInt(square.getAttribute("data-coords")[3]);
-        const attackedShip = player.board.receiveAttack([x, y]);
+        let attackedShip = computer.board.receiveAttack([x, y]);
 
-        if (attackedShip != false && player.board.allShipsSunk() != true) {
+        if (attackedShip != false && computer.board.allShipsSunk() != true) {
             square.style.backgroundColor = "red";
             sendMessage(`${player.name} HIT!  [${x}, ${y}]`);
             if (attackedShip.isSunk()) {
                 sendMessage("You have sank their ship!");
             }
-        } else if (attackedShip == false && player.board.allShipsSunk() != true) {
+        } else if (attackedShip == false && computer.board.allShipsSunk() != true) {
             square.style.backgroundColor = "#D3D3D3";
             sendMessage(`${player.name} MISSED  [${x}, ${y}]`);
         }
-        if (player.board.allShipsSunk() == true) {
+        if (computer.board.allShipsSunk() == true) {
             sendMessage(`${player.name} wins the game!`);
             return;
         }
+
+        setTimeout(computerTurn, 2000);
     })
 })
+
+
+function computerTurn() {
+
+    // Get random coordinate for computer's move
+    const computersMove = computer.board.randomCoordinate();
+    const computersAttack = player.board.receiveAttack(computersMove);
+
+    if (computersAttack != false && player.board.allShipsSunk() != true) {
+        let x = computersMove[0];
+        let y = computersMove[1];
+        document.querySelector(`.gameboard.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "red";
+        sendMessage(`${computer.name} HIT!  [${x}, ${y}]`);
+        if (computersAttack.isSunk()) {
+            sendMessage("Computer sank your ship!");
+        }
+    } else if (computersAttack == false && player.board.allShipsSunk() != true) {
+        player.board.displayMissedAttacks().forEach((coord) => {
+            let x = coord[0];
+            let y = coord[1];
+            document.querySelector(`.gameboard.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "#D3D3D3";
+        })
+        sendMessage(`${computer.name} MISSED  [${x}, ${y}]`);
+    }
+    if (player.board.allShipsSunk() == true) {
+        sendMessage(`${computer.name} wins the game!`);
+        return;
+    }
+}
 
 function startGame() {
     console.log("Start Game");
     computerBoard.style.display = "grid";
     rotateButton.style.display = "none";
+
+    // Randomly generate computer's ships
+    for (let i = 5; i > 1; i--) {
+        if (i == 3) {
+            computer.board.getRandomCoordinates(Ship(i));
+            computer.board.getRandomCoordinates(Ship(i));
+        } else {
+        computer.board.getRandomCoordinates(Ship(i));
+        }
+    }
+    console.log(computer.board.displayShips());
 }
 
 function sendMessage(message) {
