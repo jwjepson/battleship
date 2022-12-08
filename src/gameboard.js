@@ -87,9 +87,6 @@ function GameBoard() {
         displayCoordinates() {
             return coordinates;
         },
-        deleteShips() {
-            ships.splice(0, ships.length);
-        },
         allShipsSunk() {
             for (let i = 0; i < ships.length; i++) {
                 if (ships[i].sunk == false) {
