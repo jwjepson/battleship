@@ -20,6 +20,8 @@ function GameBoard() {
     const coordinates = [];
     const ships = [];
     const missedAttacks = [];
+    const hitAttacks = [];
+    const targets = [];
     function isValidCoords(coords, shipLength, isHorizontal) {
         if (JSON.stringify(coordinates).includes(JSON.stringify(coords))) {
             console.log("Match");
@@ -53,6 +55,9 @@ function GameBoard() {
         ships.push(ship);
     }
     return {
+        targets: targets,
+        hitAttacks: hitAttacks,
+        missedAttacks: missedAttacks,
         getRandomCoordinates(ship) {
             const shipLength = ship.length;
             const isHorizontal = Math.random() > 0.5 ? true : false;
@@ -84,6 +89,8 @@ function GameBoard() {
                 if (JSON.stringify(ships[i].coordinates).includes(JSON.stringify(coords))) {
                     ships[i].hit();
                     hitShip = true;
+                    hitAttacks.push(coords);
+                    targets.push([coords[0], coords[1] - 1], [coords[0], coords[1] + 1], [coords[0] + 1, coords[1]], [coords[0] - 1, coords[1]]);
                     return ships[i];
                 }
             }       
@@ -116,7 +123,7 @@ function GameBoard() {
         },
         displayMissedAttacks() {
             return missedAttacks;
-        }
+        },
     }
 }
 
@@ -138,6 +145,8 @@ let clicks = 5;
 const player = Player("Player 1");
 const computer = Player("Computer");
 let randomSelected = false;
+let currentPlayer = player;
+
 
 playerSquares.forEach((square) => {
     square.addEventListener("click", () => {
@@ -222,42 +231,65 @@ function renderPlacement(shipLength) {
 }
 
 computerSquares.forEach((square) => {
-    square.addEventListener("mouseover", () => {  
-        computerSquares.forEach((square) => {
-            square.classList.remove("attackHover");
-        })  
-        square.classList.add("attackHover"); 
+    square.addEventListener("mouseover", () => {
+        if (currentPlayer == player) {
+            computerSquares.forEach((square) => {
+                square.classList.remove("attackHover");
+            })  
+            square.classList.add("attackHover"); 
+        }
     })
     square.addEventListener("click", () => {
-        let x = parseInt(square.getAttribute("data-coords")[1]);
-        let y = parseInt(square.getAttribute("data-coords")[3]);
-        let attackedShip = computer.board.receiveAttack([x, y]);
+        if (currentPlayer == player) {
+            let x = parseInt(square.getAttribute("data-coords")[1]);
+            let y = parseInt(square.getAttribute("data-coords")[3]);
 
-        if (attackedShip != false && computer.board.allShipsSunk() != true) {
-            square.style.backgroundColor = "red";
-            sendMessage(`${player.name} HIT!  [${x}, ${y}]`);
-            if (attackedShip.isSunk()) {
-                sendMessage("You have sank their ship!");
+            if (JSON.stringify(computer.board.hitAttacks).includes(JSON.stringify([x, y])) || JSON.stringify(computer.board.missedAttacks).includes(JSON.stringify([x, y]))) {
+                return;
             }
-        } else if (attackedShip == false && computer.board.allShipsSunk() != true) {
-            square.style.backgroundColor = "#D3D3D3";
-            sendMessage(`${player.name} MISSED  [${x}, ${y}]`);
-        }
-        if (computer.board.allShipsSunk() == true) {
-            sendMessage(`${player.name} wins the game!`);
-            return;
-        }
 
-        setTimeout(computerTurn, 2000);
+            let attackedShip = computer.board.receiveAttack([x, y]);
+
+            if (attackedShip != false && computer.board.allShipsSunk() != true) {
+                square.style.backgroundColor = "red";
+                sendMessage(`${player.name} HIT!  [${x}, ${y}]`);
+                if (attackedShip.isSunk()) {
+                    sendMessage("You have sank their ship!");
+                }
+            } else if (attackedShip == false && computer.board.allShipsSunk() != true) {
+                square.style.backgroundColor = "#D3D3D3";
+                sendMessage(`${player.name} MISSED  [${x}, ${y}]`);
+            }
+            if (computer.board.allShipsSunk() == true) {
+                sendMessage(`${player.name} wins the game!`);
+                return;
+            }
+            currentPlayer = computer;
+            setTimeout(computerTurn, 2000);
+        }
     })
 })
 
 
 function computerTurn() {
 
+    let computersMove = "";
+    let computersAttack = "";
     // Get random coordinate for computer's move
-    const computersMove = computer.board.randomCoordinate();
-    const computersAttack = player.board.receiveAttack(computersMove);
+    if (player.board.targets.length > 0) {
+        while (true) {
+            computersMove = player.board.targets.pop();
+            if (JSON.stringify(player.board.hitAttacks).includes(JSON.stringify(computersMove)) || JSON.stringify(player.board.missedAttacks).includes(JSON.stringify(computersMove))) {
+                continue;
+            }
+            break;
+        }
+        computersAttack = player.board.receiveAttack(computersMove);
+        console.log(computersMove);
+    } else {
+        computersMove = computer.board.randomCoordinate();
+        computersAttack = player.board.receiveAttack(computersMove);
+    }
 
     if (computersAttack != false && player.board.allShipsSunk() != true) {
         let x = computersMove[0];
@@ -265,6 +297,7 @@ function computerTurn() {
         document.querySelector(`.gameboard.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "red";
         sendMessage(`${computer.name} HIT!  [${x}, ${y}]`);
         if (computersAttack.isSunk()) {
+            player.board.targets.splice(0, player.board.targets.length);
             sendMessage("Computer sank your ship!");
         }
     } else if (computersAttack == false && player.board.allShipsSunk() != true) {
@@ -279,6 +312,7 @@ function computerTurn() {
         sendMessage(`${computer.name} wins the game!`);
         return;
     }
+    currentPlayer = player;
 }
 
 function startGame() {
