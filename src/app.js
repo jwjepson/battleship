@@ -334,7 +334,7 @@ function startGame() {
     console.log("Start Game");
     computerBoard.style.display = "grid";
     rotateButton.style.display = "none";
-
+    sendMessage("Launch an attack!");
     // Randomly generate computer's ships
     for (let i = 5; i > 1; i--) {
         if (i == 3) {
@@ -351,3 +351,4 @@ function sendMessage(message) {
     messageBoard.textContent = message;
 }
 renderPlacement(5);
+sendMessage("Place your ships");
