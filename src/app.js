@@ -1,5 +1,6 @@
 import {Player} from "./player";
 import {Ship} from "./ship";
+import "./styles.css";
 
 
 const playerSquares = document.querySelectorAll(".grid.player > .square");
@@ -71,7 +72,7 @@ function placeShip(square) {
 
 function renderBoard(coords) {
     coords.forEach((coord) => {
-        document.querySelector(`[data-coords='[${coord[0]},${coord[1]}]']`).style.backgroundColor = "gray";
+        document.querySelector(`[data-coords='[${coord[0]},${coord[1]}]']`).style.backgroundColor = "#cce6ff";
     })
 }
 
@@ -130,7 +131,7 @@ computerSquares.forEach((square) => {
                     sendMessage("You have sank their ship!");
                 }
             } else if (attackedShip == false && computer.board.allShipsSunk() != true) {
-                square.style.backgroundColor = "#D3D3D3";
+                square.style.backgroundColor = "#E8E8E8";
                 sendMessage(`${player.name} MISSED  [${x}, ${y}]`);
             }
             if (computer.board.allShipsSunk() == true) {
@@ -186,7 +187,7 @@ function computerTurn() {
         player.board.displayMissedAttacks().forEach((coord) => {
             let x = coord[0];
             let y = coord[1];
-            document.querySelector(`.grid.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "#D3D3D3";
+            document.querySelector(`.grid.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "#E8E8E8";
             sendMessage(`${computer.name} MISSED  [${x}, ${y}]`);
         })
     }
