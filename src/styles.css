@@ -1,3 +1,13 @@
+@font-face {
+    font-family: battle-ship;
+    src: url(./fonts/battle-ship.ttf);
+}
+
+@font-face {
+    font-family: army-font;
+    src: url(./fonts/army.ttf);
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -22,7 +32,9 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 50px;
+    font-size: 70px;
+    font-family: battle-ship;
+    color: white;
 }
 
 footer {
@@ -32,6 +44,7 @@ footer {
     justify-content: center;
     gap: 5px;
     font-size: 20px;
+    font-family: army-font;
 
 }
 
@@ -42,7 +55,6 @@ footer > a {
 .grid {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    padding: 10px;
 }
 
 .gameboard.computer {
@@ -55,6 +67,7 @@ footer > a {
     justify-content: center;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin-bottom: 5px;
+    font-family: army-font;
 }
 
 .grid:hover {
@@ -73,11 +86,11 @@ footer > a {
 .square {
     height: 40px;
     width: 40px;
-    border: .5px solid black;
+    border: .5px solid #cce6ff;
 }
 
 .shipHover {
-    background-color: gray;
+    background-color: #cce6ff;
 }
 
 .attackHover:hover {
@@ -87,11 +100,18 @@ footer > a {
 
 #rotate-button {
     padding: 10px;
-    width: 90px;
+    width: 130px;
     margin-bottom: 10px;
     border-radius: 1em;
     border: none;
+    font-family: army-font;
+    font-size: 20px;
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+#rotate-button:hover {
+    background-color: gray;
+    color: white;
 }
 
 #selector-buttons {
@@ -116,6 +136,6 @@ footer > a {
     align-items: center;
     font-size: 25px;
     padding: 5px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: army-font;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
