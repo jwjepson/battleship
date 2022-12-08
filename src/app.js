@@ -1,138 +1,6 @@
-function Ship(length) {
-    return {
-        length: length,
-        hits: 0,
-        coordinates: [],
-        sunk: false,
-        hit() {
-            this.hits += 1;
-        },
-        isSunk() {
-            if (this.hits == this.length) {
-                this.sunk = true;
-                return true;
-            }
-        }
-    }
-}
+import {Player} from "./player";
+import {Ship} from "./ship";
 
-function GameBoard() {
-    const coordinates = [];
-    const ships = [];
-    const missedAttacks = [];
-    const hitAttacks = [];
-    const targets = [];
-    function isValidCoords(coords, shipLength, isHorizontal) {
-        if (JSON.stringify(coordinates).includes(JSON.stringify(coords))) {
-            console.log("Match");
-            return false;                 
-        }
-        for (let i = 1; i < shipLength; i++) {
-            if (isHorizontal) {
-                if ((coords[0] + shipLength > 10) || (JSON.stringify(coordinates).includes(JSON.stringify([coords[0] + i, coords[1]])))) {
-                    return false;
-                }
-            } else {
-                if ((coords[1] + shipLength > 10) || (JSON.stringify(coordinates).includes(JSON.stringify([coords[0], coords[1] + i])))) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    function setCoordinates(ship, x, y, isHorizontal) {
-        ship.coordinates.push([x, y]);
-        coordinates.push([x, y]);
-        for (let i = 1; i < ship.length; i++) {
-            if (isHorizontal) {
-                x = x + 1;
-            } else {
-                y = y + 1;
-            }
-            ship.coordinates.push([x, y]);
-            coordinates.push([x, y]);
-        }
-        ships.push(ship);
-    }
-    return {
-        targets: targets,
-        hitAttacks: hitAttacks,
-        missedAttacks: missedAttacks,
-        getRandomCoordinates(ship) {
-            const shipLength = ship.length;
-            const isHorizontal = Math.random() > 0.5 ? true : false;
-            let x;
-            let y;
-            while (true) {
-                x = Math.floor(Math.random() * 10);
-                y = Math.floor(Math.random() * 10);
-                if (!isValidCoords([x, y], shipLength, isHorizontal)) {
-                    continue;
-                } else {
-                    break;
-                }
-            }
-            setCoordinates(ship, x, y, isHorizontal);
-        },
-        getCoordinates(ship, coords, isHorizontal) {
-            if (isValidCoords(coords, ship.length, isHorizontal)) {
-                let x = coords[0];
-                let y = coords[1];
-                setCoordinates(ship, x, y, isHorizontal);
-            } else {
-                return false;
-            }
-        },
-        receiveAttack(coords) {
-            let hitShip = false;
-            for (let i = 0; i < ships.length; i++) {
-                if (JSON.stringify(ships[i].coordinates).includes(JSON.stringify(coords))) {
-                    ships[i].hit();
-                    hitShip = true;
-                    hitAttacks.push(coords);
-                    targets.push([coords[0], coords[1] - 1], [coords[0], coords[1] + 1], [coords[0] + 1, coords[1]], [coords[0] - 1, coords[1]]);
-                    return ships[i];
-                }
-            }       
-            if (!hitShip) {
-                missedAttacks.push(coords);
-                return false;
-            }
-        },
-        displayShips() {
-            return ships;
-        },
-        displayCoordinates() {
-            return coordinates;
-        },
-        deleteShips() {
-            ships.splice(0, ships.length);
-        },
-        allShipsSunk() {
-            for (let i = 0; i < ships.length; i++) {
-                if (ships[i].sunk == false) {
-                    return false;
-                }
-            }
-            return true;
-        },
-        randomCoordinate() {
-            x = Math.floor(Math.random() * 10);
-            y = Math.floor(Math.random() * 10);
-            return [x, y];
-        },
-        displayMissedAttacks() {
-            return missedAttacks;
-        },
-    }
-}
-
-function Player(name) {
-    return {
-        name: name,
-        board: GameBoard(),
-    }
-}
 
 const playerSquares = document.querySelectorAll(".gameboard.player > .square");
 const computerSquares = document.querySelectorAll(".gameboard.computer > .square");
@@ -146,7 +14,6 @@ let clicks = 5;
 // Populate players
 const player = Player("Player 1");
 const computer = Player("Computer");
-let randomSelected = false;
 let currentPlayer = player;
 
 
@@ -161,11 +28,11 @@ rotateButton.addEventListener("click", () => {
 
 playerSquares.forEach((square) => {
     square.addEventListener("click", () => {
-        getCoords(square);
+        placeShip(square);
     })
 });
 
-function getCoords(square) {
+function placeShip(square) {
     let x = parseInt(square.getAttribute("data-coords")[1]);
     let y = parseInt(square.getAttribute("data-coords")[3]);
     let coords = [x, y];
@@ -320,8 +187,8 @@ function computerTurn() {
             let x = coord[0];
             let y = coord[1];
             document.querySelector(`.gameboard.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "#D3D3D3";
+            sendMessage(`${computer.name} MISSED  [${x}, ${y}]`);
         })
-        sendMessage(`${computer.name} MISSED  [${x}, ${y}]`);
     }
     if (player.board.allShipsSunk() == true) {
         sendMessage(`${computer.name} wins the game!`);
@@ -350,5 +217,6 @@ function startGame() {
 function sendMessage(message) {
     messageBoard.textContent = message;
 }
+
 renderPlacement(5);
 sendMessage("Place your ships");
