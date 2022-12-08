@@ -138,6 +138,8 @@ const playerSquares = document.querySelectorAll(".gameboard.player > .square");
 const computerSquares = document.querySelectorAll(".gameboard.computer > .square");
 const computerBoard = document.querySelector(".gameboard.computer");
 const messageBoard = document.querySelector("#message-board");
+const rotateButton = document.querySelector("#rotate-button");
+
 let isHorizontal = false;
 let clicks = 5;
 
@@ -146,6 +148,15 @@ const player = Player("Player 1");
 const computer = Player("Computer");
 let randomSelected = false;
 let currentPlayer = player;
+
+
+rotateButton.addEventListener("click", () => {
+    if (isHorizontal == false) {
+        isHorizontal = true;
+    } else {
+        isHorizontal = false;
+    }
+})
 
 
 playerSquares.forEach((square) => {
@@ -159,13 +170,17 @@ function getCoords(square) {
     let y = parseInt(square.getAttribute("data-coords")[3]);
     let coords = [x, y];
 
+    // If the coordinate is already occupied by a ship
     if (JSON.stringify(player.board.displayCoordinates()).includes(JSON.stringify(coords))) {
         return;
     }
 
+    // If all the ships have been placed
     if (player.board.displayShips().length == 5) {
         return;
     }
+
+
     if (player.board.displayShips().length == 2) {
         player.board.getCoordinates(Ship(3), coords, isHorizontal);
         renderBoard(player.board.displayCoordinates());
@@ -186,16 +201,6 @@ function getCoords(square) {
         }
     }
 }
-
-const rotateButton = document.querySelector("#rotate-button");
-rotateButton.addEventListener("click", () => {
-    if (isHorizontal == false) {
-        isHorizontal = true;
-    } else {
-        isHorizontal = false;
-    }
-})
-
 
 function renderBoard(coords) {
     coords.forEach((coord) => {
@@ -230,6 +235,7 @@ function renderPlacement(shipLength) {
     })
 }
 
+// Player attacking the computer's board
 computerSquares.forEach((square) => {
     square.addEventListener("mouseover", () => {
         if (currentPlayer == player) {
@@ -279,6 +285,9 @@ function computerTurn() {
     if (player.board.targets.length > 0) {
         while (true) {
             computersMove = player.board.targets.pop();
+            if (computersMove[0] < 0 || computersMove[0] > 9 || computersMove[1] < 0 || computersMove[1] > 9) {
+                continue;
+            }
             if (JSON.stringify(player.board.hitAttacks).includes(JSON.stringify(computersMove)) || JSON.stringify(player.board.missedAttacks).includes(JSON.stringify(computersMove))) {
                 continue;
             }
@@ -287,7 +296,13 @@ function computerTurn() {
         computersAttack = player.board.receiveAttack(computersMove);
         console.log(computersMove);
     } else {
-        computersMove = computer.board.randomCoordinate();
+        while (true) {
+            computersMove = computer.board.randomCoordinate();
+            if (JSON.stringify(player.board.hitAttacks).includes(JSON.stringify(computersMove)) || JSON.stringify(player.board.missedAttacks).includes(JSON.stringify(computersMove))) {
+                continue;
+            }
+            break;
+        }
         computersAttack = player.board.receiveAttack(computersMove);
     }
 
