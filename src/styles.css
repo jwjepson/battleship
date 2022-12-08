@@ -17,7 +17,7 @@ body {
 header {
     width: 100vw;
     height: 100px;
-    background-color: pink;
+    background-color: #d3d3d3;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -63,10 +63,13 @@ footer {
     cursor: crosshair;
 }
 
-#rotate-button, #random-button {
+#rotate-button {
     padding: 10px;
     width: 90px;
     margin-bottom: 10px;
+    border-radius: 1em;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
 #selector-buttons {
@@ -81,8 +84,8 @@ footer {
 
 #message-board {
     height: 50px;
-    background-color: black;
-    color: white;
+    background-color: #d3d3d3;
+    color: black;
     width: 400px;
     margin-bottom: 20px;
     border-radius: 1em;
@@ -92,4 +95,5 @@ footer {
     font-size: 25px;
     padding: 5px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 }
