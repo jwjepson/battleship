@@ -2,8 +2,8 @@ import {Player} from "./player";
 import {Ship} from "./ship";
 
 
-const playerSquares = document.querySelectorAll(".gameboard.player > .square");
-const computerSquares = document.querySelectorAll(".gameboard.computer > .square");
+const playerSquares = document.querySelectorAll(".grid.player > .square");
+const computerSquares = document.querySelectorAll(".grid.computer > .square");
 const computerBoard = document.querySelector(".gameboard.computer");
 const messageBoard = document.querySelector("#message-board");
 const rotateButton = document.querySelector("#rotate-button");
@@ -176,7 +176,7 @@ function computerTurn() {
     if (computersAttack != false && player.board.allShipsSunk() != true) {
         let x = computersMove[0];
         let y = computersMove[1];
-        document.querySelector(`.gameboard.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "red";
+        document.querySelector(`.grid.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "red";
         sendMessage(`${computer.name} HIT!  [${x}, ${y}]`);
         if (computersAttack.isSunk()) {
             player.board.targets.splice(0, player.board.targets.length);
@@ -186,7 +186,7 @@ function computerTurn() {
         player.board.displayMissedAttacks().forEach((coord) => {
             let x = coord[0];
             let y = coord[1];
-            document.querySelector(`.gameboard.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "#D3D3D3";
+            document.querySelector(`.grid.player > .square[data-coords="[${x},${y}]"]`).style.backgroundColor = "#D3D3D3";
             sendMessage(`${computer.name} MISSED  [${x}, ${y}]`);
         })
     }
