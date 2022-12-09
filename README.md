@@ -4,8 +4,8 @@
 
 ## Table of Contents
 - [Project Description](https://github.com/jwjepson/battleship#project-description)
-- [What I've learned](https://github.com/jwjepson/battleshipr#what-ive-learned)
-- [Final thoughts](https://github.com/jwjepson/battleshipr#final-thoughts)
+- [What I've learned](https://github.com/jwjepson/battleship#what-ive-learned)
+- [Final thoughts](https://github.com/jwjepson/battleship#final-thoughts)
 
 
 
